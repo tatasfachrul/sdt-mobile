@@ -1,18 +1,21 @@
 import { Texts } from '@/constants/Texts';
+import { Owner } from '@/types';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Colors } from '../constants/Colors';
-import { Owner } from '../types';
+
+import { StyleProp, ViewStyle } from 'react-native';
 
 interface MasterBannerProps {
   master: Owner;
+  style?: StyleProp<ViewStyle>;
 }
 
-export const MasterBanner = ({ master }: MasterBannerProps) => {
+export const MasterBanner = ({ master, style }: MasterBannerProps) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <View style={styles.avatar}>
-        <Text style={{...Texts.Typography.Avatar, color: Colors.master}}>
+        <Text style={{ ...Texts.Typography.Avatar, color: Colors.master }}>
           {master.firstName[0]}{master.lastName[0]}
         </Text>
       </View>

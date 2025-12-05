@@ -3,6 +3,7 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { MasterBanner } from '@/components/MasterBanner';
 import { CatCard } from '../../components/CatCard';
 import { Colors } from '../../constants/Colors';
 import { useShake } from '../../hooks/useShake';
@@ -18,8 +19,10 @@ export default function OwnerDetailScreen() {
 
   const favorites = useAppStore((state) => state.favorites);
   const toggleFavorite = useAppStore((state) => state.toggleFavorite);
-  const setMaster = useAppStore((state) => state.setMaster);
+  const setMasterId = useAppStore((state) => state.setMasterId);
+  const setMasterData = useAppStore((state) => state.setMasterData);
   const masterId = useAppStore((state) => state.masterId);
+  const masterData = useAppStore((state) => state.masterData);
 
   useEffect(() => {
     if (id) {
@@ -34,9 +37,11 @@ export default function OwnerDetailScreen() {
     setLoading(false);
   };
 
+
   const handleMakeMaster = () => {
     if (owner) {
-      setMaster(owner.id);
+      setMasterId(owner.id);
+      setMasterData(owner);
       Alert.alert('Success', `${owner.firstName} is now the Master!`);
     }
   };
@@ -57,47 +62,39 @@ export default function OwnerDetailScreen() {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen 
+      <Stack.Screen
         options={{
-          headerTitle: '',
+          headerTitleAlign: 'center',
           headerTransparent: true,
+          headerTitle: () => (
+            masterData ? (
+              <MasterBanner
+                master={masterData}
+                style={{ marginTop: 0, padding: 0, marginBottom: 0 }}
+              />
+            ) : null
+          ),
           headerLeft: () => (
             <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
               <Ionicons name="arrow-back" size={24} color={Colors.text} />
             </TouchableOpacity>
           ),
-          headerRight: () => (
-             <View style={styles.headerRight}>
-                {masterId === owner.id && (
-                    <Text style={styles.masterText}>Master: {owner.firstName} {owner.lastName}</Text>
-                )}
-                {/* Avatar could go here if needed to match design exactly */}
-             </View>
-          )
-        }} 
+        }}
       />
-      
+
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.headerSpacer} />
-        
-        {/* Header Area matching design */}
-        <View style={styles.topHeader}>
-             <View style={styles.avatarSmall}>
-                <Text style={styles.avatarTextSmall}>{owner.firstName[0]}{owner.lastName[0]}</Text>
-             </View>
-             <Text style={styles.topHeaderText}>Master: {masterId === owner.id ? `${owner.firstName} ${owner.lastName}` : 'None'}</Text>
-        </View>
 
         <Text style={styles.sectionTitle}>Owner Card</Text>
         <View style={styles.ownerCard}>
           <View style={styles.ownerAvatar}>
-             <Text style={styles.ownerAvatarText}>{owner.firstName[0]}{owner.lastName[0]}</Text>
+            <Text style={styles.ownerAvatarText}>{owner.firstName[0]}{owner.lastName[0]}</Text>
           </View>
           <View style={styles.ownerInfo}>
-             <Text style={styles.label}>First Name</Text>
-             <Text style={styles.value}>{owner.firstName}</Text>
-             <Text style={styles.label}>Last Name</Text>
-             <Text style={styles.value}>{owner.lastName}</Text>
+            <Text style={styles.label}>First Name</Text>
+            <Text style={styles.value}>{owner.firstName}</Text>
+            <Text style={styles.label}>Last Name</Text>
+            <Text style={styles.value}>{owner.lastName}</Text>
           </View>
           <TouchableOpacity onPress={() => toggleFavorite(owner.id)}>
             <Ionicons
@@ -136,48 +133,52 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
     paddingBottom: 100,
+    paddingTop: 32
   },
   headerSpacer: {
     height: 60,
   },
   backButton: {
-    marginLeft: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 0, // Reset margin as headerLeft handles it
+    padding: 8, // Add touch area
   },
   headerRight: {
-      marginRight: 16,
+    marginRight: 16,
   },
   masterText: {
-      fontSize: 14,
-      fontWeight: '600',
+    fontSize: 14,
+    fontWeight: '600',
   },
   topHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginBottom: 24,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
   },
   avatarSmall: {
-      width: 40,
-      height: 40,
-      borderRadius: 20,
-      borderWidth: 1,
-      borderColor: Colors.secondary,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginRight: 12,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: Colors.secondary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
   },
   avatarTextSmall: {
-      color: Colors.secondary,
-      fontWeight: 'bold',
+    color: Colors.secondary,
+    fontWeight: 'bold',
   },
   topHeaderText: {
-      fontSize: 16,
-      fontWeight: '600',
-      color: Colors.text,
+    fontSize: 16,
+    fontWeight: '600',
+    color: Colors.text,
   },
   sectionTitle: {
     fontSize: 16,
-    color: Colors.primary, // Light blue/purple color
+    color: Colors.textSecondary,
     marginBottom: 12,
     marginTop: 12,
   },
@@ -213,7 +214,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 12,
-    color: Colors.primary, // Light blue/purple
+    color: Colors.textSecondary, // Light blue/purple
     marginBottom: 4,
   },
   value: {
@@ -227,11 +228,11 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    padding: 16,
+    padding: 32,
     backgroundColor: Colors.background, // Or transparent with blur
   },
   button: {
-    backgroundColor: Colors.secondary, // Teal/Green
+    backgroundColor: Colors.master, // Teal/Green
     paddingVertical: 16,
     borderRadius: 8,
     alignItems: 'center',
