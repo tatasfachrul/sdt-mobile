@@ -5,6 +5,7 @@ import { Stack, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+import { Texts } from '@/constants/Texts';
 import { MasterBanner } from '../components/MasterBanner';
 import { OwnerCard } from '../components/OwnerCard';
 import { Colors } from '../constants/Colors';
@@ -61,6 +62,7 @@ export default function OwnerListScreen() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
+        <Stack.Screen options={{ headerShown: false }} />
         <ActivityIndicator size="large" color={Colors.primary} />
       </View>
     );
@@ -72,7 +74,7 @@ export default function OwnerListScreen() {
       {masterOwner && <MasterBanner master={masterOwner} />}
       
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Owners List</Text>
+        <Text style={{...Texts.Typography.Title, color: Colors.textSecondary}}>Owners List</Text>
         <TouchableOpacity 
           style={styles.sortButton} 
           onPress={() => setSortBy(prev => prev === 'name' ? 'cats' : 'name')}
@@ -86,7 +88,6 @@ export default function OwnerListScreen() {
         <FlashList
           data={sortedOwners}
           renderItem={renderItem}
-          // estimatedItemSize={85}
           keyExtractor={(item) => item.id}
         />
       </View>
@@ -121,8 +122,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sortText: {
-    fontSize: 14,
-    color: Colors.textSecondary,
+    fontSize: 12,
+    color: Colors.textSecondary2,
     marginRight: 4,
   },
   listContainer: {

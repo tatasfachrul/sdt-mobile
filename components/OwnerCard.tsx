@@ -1,3 +1,4 @@
+import { Texts } from '@/constants/Texts';
 import { Ionicons } from '@expo/vector-icons';
 import React, { memo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -15,7 +16,7 @@ export const OwnerCard = memo(({ owner, isFavorite, onToggleFavorite, onPress }:
   return (
     <TouchableOpacity style={styles.container} onPress={() => onPress(owner.id)} activeOpacity={0.7}>
       <View style={styles.avatar}>
-        <Text style={styles.avatarText}>
+        <Text style={{...Texts.Typography.Avatar, color: Colors.surface}}>
           {owner.firstName[0]}{owner.lastName[0]}
         </Text>
       </View>
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#E0E0E0',
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,

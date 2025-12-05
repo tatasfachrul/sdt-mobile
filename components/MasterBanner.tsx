@@ -1,3 +1,4 @@
+import { Texts } from '@/constants/Texts';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Colors } from '../constants/Colors';
@@ -11,11 +12,11 @@ export const MasterBanner = ({ master }: MasterBannerProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.avatar}>
-        <Text style={styles.avatarText}>
+        <Text style={{...Texts.Typography.Avatar, color: Colors.master}}>
           {master.firstName[0]}{master.lastName[0]}
         </Text>
       </View>
-      <Text style={styles.text}>Master: {master.firstName} {master.lastName}</Text>
+      <Text style={Texts.Typography.Title}>Master: {master.firstName} {master.lastName}</Text>
     </View>
   );
 };
@@ -25,9 +26,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'transparent',
+    marginTop: 24,
     padding: 16,
-    backgroundColor: Colors.surface, // Or transparent if background handles it
-    marginBottom: 8,
   },
   avatar: {
     width: 40,
@@ -38,15 +39,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
-  },
-  avatarText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: Colors.master,
-  },
-  text: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: Colors.text,
+    backgroundColor: Colors.surface,
   },
 });
