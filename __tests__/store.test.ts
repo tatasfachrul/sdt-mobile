@@ -2,7 +2,7 @@ import { useAppStore } from '../store/useStore';
 
 describe('useAppStore', () => {
   beforeEach(() => {
-    useAppStore.setState({ favorites: [], masterId: null });
+    useAppStore.setState({ favorites: [], masterId: null, masterData: null });
   });
 
   it('should toggle favorite', () => {
@@ -15,13 +15,21 @@ describe('useAppStore', () => {
     expect(useAppStore.getState().favorites).not.toContain('1');
   });
 
-  it('should set master', () => {
-    const { setMaster } = useAppStore.getState();
+  it('should set master id', () => {
+    const { setMasterId } = useAppStore.getState();
     
-    setMaster('1');
+    setMasterId('1');
     expect(useAppStore.getState().masterId).toBe('1');
     
-    setMaster('2');
+    setMasterId('2');
     expect(useAppStore.getState().masterId).toBe('2');
+  });
+
+  it('should set master data', () => {
+    const { setMasterData } = useAppStore.getState();
+    const mockOwner = { id: '1', firstName: 'John', lastName: 'Doe', cats: [] };
+    
+    setMasterData(mockOwner);
+    expect(useAppStore.getState().masterData).toEqual(mockOwner);
   });
 });
